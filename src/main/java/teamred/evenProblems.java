@@ -3,11 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 
@@ -23,6 +19,8 @@ public class evenProblems {
         ArrayList<Integer> childrenVals = new ArrayList<>();
         ArrayList<Double> chargesVals = new ArrayList<>();
         ArrayList<String> smokerVals = new ArrayList<>();
+        ArrayList<String> regionVals = new ArrayList<>();
+        Random rand = new Random();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(csvPath))){
             line = reader.readLine(); // Skip header line
@@ -38,15 +36,16 @@ public class evenProblems {
             ageVals.add(Integer.parseInt(values[0]));
             bmiVals.add(Double.parseDouble(values[2]));
             childrenVals.add(Integer.parseInt(values[3]));
-            chargesVals.add(Double.parseDouble(values[6]));
             smokerVals.add(values[4]);
+            regionVals.add(values[5]);
+            chargesVals.add(Double.parseDouble(values[6]));
 
         }
         //Problem 2
         // System.out.println("Age values: " + calculateValsFromIntegers(ageVals));
         // System.out.println("Children values: " + calculateValsFromIntegers(childrenVals));
         // System.out.println("BMI values: " + calculateValsFromDoubles(bmiVals));
-        // System.out.println("Charges values: " + calculateValsFromDoubles(chargesVals));
+        //System.out.println("Charges values: " + calculateValsFromDoubles(chargesVals));
 
         //Problem 4
         //verticalHistogram(bmiVals);
@@ -73,11 +72,26 @@ public class evenProblems {
         // }
 
         //Problem 20
-        double pearsonR = simpleLinearRegression(bmiVals, chargesVals, null);
+        double pearsonR = simpleLinearRegression(chargesVals, bmiVals, null);
         System.out.println("r = " + pearsonR); //Print the correlation coefficient
 
-        double[] sampleBMI = {18.5, 25.0, 32.23, 35.0, 29.3, 45.0, 50.0, 135.0, 84.324, 67.23, 23.4};
-        double r2 = simpleLinearRegression(bmiVals, chargesVals, sampleBMI);
+
+        double csmin = 1000.0;
+        double csmax = 70000.0;
+        double rubix = rand.nextDouble() * (csmax - csmin) + csmin;
+        ArrayList<Double> sampleCharges = new ArrayList<>();
+        for(int i = 0; i < 33; i++){
+            rubix = rand.nextDouble() * (csmax - csmin) + csmin;
+            sampleCharges.add(Math.round(rubix *1000) / 1000.0);
+        }
+        System.out.println("Charges verses BMI:\n");
+        double r2 = simpleLinearRegression(chargesVals, bmiVals, sampleCharges);
+
+        //Problem 22
+        System.out.println("\nCharges verses Region:\n");
+        double r3 = simpleLinearStringVals(chargesVals, regionVals, sampleCharges);
+        System.out.println("r = " + r3); //Print the correlation coefficient
+
 
     }
 
@@ -378,7 +392,7 @@ public class evenProblems {
         return true; // Assume null hypothesis is true
     }
 
-    public static Double simpleLinearRegression(ArrayList<Double> xVals, ArrayList<Double> yVals, double[] userVals){
+    public static Double simpleLinearRegression(ArrayList<Double> xVals, ArrayList<Double> yVals, ArrayList<Double> userVals){
 
         double xMean = 0.0;
         double yMean = 0.0;
@@ -424,7 +438,6 @@ public class evenProblems {
         }
         rDenominator = Math.sqrt(sumX2 * sumY2);
         r = rNumerator / rDenominator;
-        double roundedR = Math.round(r * 1000) / 1000.0;
 
         //get standard deviations
         double stdX = 0.0;
@@ -440,10 +453,28 @@ public class evenProblems {
         if(userVals != null){
             for(double userX : userVals){
                 double predictedY = a + (b * userX);
-                System.out.println("For x = " + userX + ", predicted y = " + predictedY);
+                System.out.println("For x = " + userX + ", predicted y = " + Math.round(predictedY*1000)/1000.0);
             }
         }
-        return roundedR;
+        return r;
+    }
+    public static Double simpleLinearStringVals(ArrayList<Double> xVals, ArrayList<String> sVals, ArrayList<Double> userVals){
+        ArrayList<Double> yVals = new ArrayList<>();
+        for(String s : sVals){
+            if(s.equals("southeast")){
+                yVals.add(0.0);
+            } else if(s.equals("southwest")){
+                yVals.add(1.0);
+            } else if(s.equals("northeast")){
+                yVals.add(2.0);
+            } else if(s.equals("northwest")){
+                yVals.add(3.0);
+            }
+        }
+        if(userVals != null){
+            return simpleLinearRegression(xVals, yVals, userVals);
+        }
+        return simpleLinearRegression(xVals, yVals, null);
     }
 
     
