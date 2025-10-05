@@ -1,6 +1,7 @@
 package teamred;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -14,7 +15,7 @@ import java.util.Map.Entry;
 public class evenProblems {
 
     public static void main(String[] args){
-        String csvPath = "/Users/austin/Documents/CPSC_2735/assignment05/Team-Red-2/data/insurance.csv";
+        String csvPath = "/Users/austin/Documents/CPSC_2735/assignment05/Team-Red/data/insurance.csv";
         String line = "";
         ArrayList<String> data = new ArrayList<>();
         ArrayList<Integer> ageVals = new ArrayList<>();
@@ -54,22 +55,29 @@ public class evenProblems {
         ////smokerHistogram(smokerVals);
         
         //Problem 8
-        boolean result = averageCharge(ageVals, chargesVals);
-        if(result){
-            System.out.println("It is true that the average charge for people over 50 is at least double that of people under 20.");
-        }
-        else{
-            System.out.println("It is false that the average charge for people over 50 is at least double that of people under 20.");
-        }
+        // boolean result = averageCharge(ageVals, chargesVals);
+        // if(result){
+        //     System.out.println("It is true that the average charge for people over 50 is at least double that of people under 20.");
+        // }
+        // else{
+        //     System.out.println("It is false that the average charge for people over 50 is at least double that of people under 20.");
+        // }
 
         //Problem 10
-        boolean result2 = chargePerChild(childrenVals,chargesVals);
-        if(result2){
-            System.out.println("Having more children results in a lower charge per child.");
-        }
-        else{
-            System.out.println("It is not true that having more children results in a lower charge per child.");
-        }
+        // boolean result2 = chargePerChild(childrenVals,chargesVals);
+        // if(result2){
+        //     System.out.println("Having more children results in a lower charge per child.");
+        // }
+        // else{
+        //     System.out.println("It is not true that having more children results in a lower charge per child.");
+        // }
+
+        //Problem 20
+        double pearsonR = simpleLinearRegression(bmiVals, chargesVals, null);
+        System.out.println("r = " + pearsonR); //Print the correlation coefficient
+
+        double[] sampleBMI = {18.5, 25.0, 32.23, 35.0, 29.3, 45.0, 50.0, 135.0, 84.324, 67.23, 23.4};
+        double r2 = simpleLinearRegression(bmiVals, chargesVals, sampleBMI);
 
     }
 
@@ -368,6 +376,74 @@ public class evenProblems {
             }
         }
         return true; // Assume null hypothesis is true
+    }
+
+    public static Double simpleLinearRegression(ArrayList<Double> xVals, ArrayList<Double> yVals, double[] userVals){
+
+        double xMean = 0.0;
+        double yMean = 0.0;
+        //Calculate means
+        for(double x : xVals){
+            xMean += x;
+        }
+        xMean /= xVals.size();
+        for(double y : yVals){
+            yMean += y;
+        }
+        yMean /= yVals.size();
+
+        //x-xmean and y-ymean
+        ArrayList<Double> xDiff = new ArrayList<>();
+        ArrayList<Double> yDiff = new ArrayList<>();
+        
+        for(int i = 0; i < xVals.size(); i++){
+            xDiff.add(xVals.get(i) - xMean);
+            yDiff.add(yVals.get(i) - yMean);  
+        }
+        ArrayList<Double> xDiffSquared = new ArrayList<>();
+        ArrayList<Double> yDiffSquared = new ArrayList<>();
+
+        ArrayList<Double> xyProducts = new ArrayList<>();
+        for(int c = 0; c < xDiff.size(); c++){
+            xDiffSquared.add(xDiff.get(c) * xDiff.get(c));
+            yDiffSquared.add(yDiff.get(c) * yDiff.get(c));
+            xyProducts.add(xDiff.get(c) * yDiff.get(c));
+        }
+        //Find r
+        double rNumerator = 0.0;
+        double rDenominator = 0.0;
+        double sumX2 = 0.0;
+        double sumY2 = 0.0;
+        double r = 0.0;
+        for(double xy : xyProducts){
+            rNumerator += xy;
+        }
+         for(double val : xDiffSquared){
+            sumX2 += val;
+            sumY2 += val;
+        }
+        rDenominator = Math.sqrt(sumX2 * sumY2);
+        r = rNumerator / rDenominator;
+        double roundedR = Math.round(r * 1000) / 1000.0;
+
+        //get standard deviations
+        double stdX = 0.0;
+        double stdY = 0.0;
+        stdX = Math.sqrt(sumX2 / (xDiffSquared.size() - 1));
+        stdY = Math.sqrt(sumY2 / (yDiffSquared.size() - 1));
+
+        //get slope(b) and y-intercept(a)
+        double b = r * (stdY / stdX);
+        double a = yMean - (b * xMean);
+
+        //Predict y values for user input x values
+        if(userVals != null){
+            for(double userX : userVals){
+                double predictedY = a + (b * userX);
+                System.out.println("For x = " + userX + ", predicted y = " + predictedY);
+            }
+        }
+        return roundedR;
     }
 
     
