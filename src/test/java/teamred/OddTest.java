@@ -6,7 +6,7 @@ import java.util.*;
 public class OddTest {
     
     @DriverTest
-    void dataSetRecords(){
+    void testDataSetRecords(){
         // Arrange
         List<InsuranceRecord> records = Arrays.asList(
             new InsuranceRecord(30, 22.0, 0, 2000.0, "northwest", "no","male"),
@@ -37,6 +37,23 @@ public class OddTest {
         // Assert
         assertTrue(histogram.contains("20: **"));
         assertTrue(histogram.contains("30: *"));
+    }
+    @DriverTest
+    public void testCountByChildren(){
+        // Arrange
+         List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 1, 2000.0, "northwest", "no","male"),
+            new InsuranceRecord(30, 28.0, 1, 3000.0, "southeast", "yes", "female"),
+            new InsuranceRecord(40, 35.0, 2, 4000.0, "southwest", "no", "male")
+        );
+
+        // Act
+        Map<Integer, Integer> result = InsuranceProblems.countByChildren(records);
+
+        // Assert
+        assertEquals(2, result.get(1));
+        assertEquals(1, result.get(2));
+
     }
 
 
