@@ -103,7 +103,8 @@ public class OddTest {
         List<InsuranceRecord> records = Arrays.asList(
             new InsuranceRecord(20, 22.0, 0, 1000.0, "northwest", "no","male"),
             new InsuranceRecord(30, 25.0, 1, 2000.0, "southeast", "yes", "female"),
-            new InsuranceRecord(40, 28.0, 2, 3000.0, "southwest", "no", "male")
+            new InsuranceRecord(40, 28.0, 2, 3000.0, "southwest", "no", "male"),
+            new InsuranceRecord(50, 30.0, 3, 4000.0, "northeast", "yes", "female"),
         );
         // Act
         boolean result = InsuranceProblems.isRegionFair(records);
