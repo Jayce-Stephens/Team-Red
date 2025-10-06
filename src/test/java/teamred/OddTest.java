@@ -150,5 +150,18 @@ public class OddTest {
         assertEquals(40.0, result);
     }
 
+    @DriverTest
+    public void testaverageAgeSouthernersMoreChildren(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 2, 1000.0, "southwest", "no","male"),
+            new InsuranceRecord(40, 28.0, 1, 2000.0, "northwest", "no", "male"),
+        );
+        // Act
+        double result = InsuranceProblems.averageAgeSouthernersSmokeMore(records);
+        // Assert
+        assertEquals(20.0, result);
+    }
+
     
 }
