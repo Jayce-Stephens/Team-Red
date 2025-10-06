@@ -123,7 +123,19 @@ public class OddTest {
         // Assert
         assertTrue(result);
     }
-
+    @DriverTest
+    public void testRegionsbyAverageCharges(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 0, 5000.0, "northeast", "no","male"),
+            new InsuranceRecord(30, 25.0, 1, 2000.0, "southeast", "yes", "female"),
+            new InsuranceRecord(40, 28.0, 2, 1000.0, "southwest", "no", "male"),
+        );
+        // Act
+        List<String> result = InsuranceProblems.regionsByAverageCharges(records);
+        // Assert
+        assertEquals("northeast", sorted.get(0));
+    }
 
     
 }
