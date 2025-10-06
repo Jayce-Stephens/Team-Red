@@ -69,10 +69,21 @@ public class OddTest {
         // Assert
         assertTrue(result);
     }
-            
+    @DriverTest
+    public void testDoSmokersHaveHigherCharges(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 0, 1000.0, "northwest", "no","male"),
+            new InsuranceRecord(30, 25.0, 1, 5000.0, "southeast", "yes", "female")
+        );
 
+        // Act
+        boolean result = InsuranceProblems.doSmokersHaveHigherCharges(records); 
 
-    
+        // Assert
+        assertTrue(result);
+    }
+   
 
     
 }
