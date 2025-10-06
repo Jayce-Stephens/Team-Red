@@ -41,7 +41,7 @@ public class OddTest {
     @DriverTest
     public void testCountByChildren(){
         // Arrange
-         List<InsuranceRecord> records = Arrays.asList(
+        List<InsuranceRecord> records = Arrays.asList(
             new InsuranceRecord(20, 22.0, 1, 2000.0, "northwest", "no","male"),
             new InsuranceRecord(30, 28.0, 1, 3000.0, "southeast", "yes", "female"),
             new InsuranceRecord(40, 35.0, 2, 4000.0, "southwest", "no", "male")
@@ -55,6 +55,21 @@ public class OddTest {
         assertEquals(1, result.get(2));
 
     }
+    @DriverTest
+    public void testIsBMIRangeChargesHigher(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 35.0, 0, 2000.0, "northwest", "no","male"),
+            new InsuranceRecord(25, 36.0, 1, 4500.0, "southeast", "yes", "female"),
+            new InsuranceRecord(30, 20.0, 1, 4000.0, "southwest", "no", "male")
+        );
+        // Act
+        boolean result = InsuranceProblems.isBmiRangeChargesHigher(records);
+
+        // Assert
+        assertTrue(result);
+    }
+            
 
 
     
