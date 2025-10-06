@@ -83,7 +83,20 @@ public class OddTest {
         // Assert
         assertTrue(result);
     }
-   
+   @DriverTest
+   public void testPearsonCorrelationChargesChildren(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 0, 1000.0, "northwest", "no","male"),
+            new InsuranceRecord(30, 25.0, 1, 2000.0, "southeast", "yes", "female"),
+            new InsuranceRecord(40, 28.0, 2, 3000.0, "southwest", "no", "male")
+        );
+        // Act
+        double result = InsuranceProblems.pearsonCorrelationChargesChildren(records);
+
+        // Assert
+        assertTrue(result > 0);
+   }
 
     
 }
