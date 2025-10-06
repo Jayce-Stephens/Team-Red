@@ -110,6 +110,20 @@ public class OddTest {
         boolean result = InsuranceProblems.isRegionFair(records);
         // Assert
         assertTrue(result);
+    }
+    @DriverTest
+    public void testDoSmokersAverageLowerBmi(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 0, 1000.0, "northwest", "no","male"),
+            new InsuranceRecord(30, 25.0, 0, 2000.0, "southeast", "yes", "female"),
+        );
+        // Act
+        boolean result = InsuranceProblems.doSmokersAverageLowerBmi(records);
+        // Assert
+        assertTrue(result);
+    }
+
 
     
 }
