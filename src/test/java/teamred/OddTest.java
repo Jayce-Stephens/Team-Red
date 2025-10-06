@@ -136,6 +136,19 @@ public class OddTest {
         // Assert
         assertEquals("northeast", sorted.get(0));
     }
+    
+    @DriverTest
+    public void testaverageAgeSouthernersSmokeMore(){
+        // Arrange
+        List<InsuranceRecord> records = Arrays.asList(
+            new InsuranceRecord(20, 22.0, 0, 1000.0, "northwest", "no","male"),
+            new InsuranceRecord(40, 28.0, 0, 2000.0, "southwest", "no", "male"),
+        );
+        // Act
+        double result = InsuranceProblems.averageAgeSouthernersSmokeMore(records);
+        // Assert
+        assertEquals(40.0, result);
+    }
 
     
 }
